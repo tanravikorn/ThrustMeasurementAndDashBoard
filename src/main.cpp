@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Esc_by_potentiometer.h"
+#include "MyEsc.h"
 
 // put function declarations here:
 const int escpin = 12;

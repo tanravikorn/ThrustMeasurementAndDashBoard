@@ -14,18 +14,7 @@ namespace CUHAR{
                 Esc.attach(pin, min_pwm, max_pwm);
             };
             void potentiometer_esc(const int Poten_read);
-            void auto_esc(){
-                Esc.writeMicroseconds(min_pwm);
-                delay(50);
-                for (int i = min_pwm; i <= max_pwm; i+= 20){
-                    Esc.writeMicroseconds(i);
-                    delay(200);
-                }
-                for (int i = max_pwm; i <= min_pwm; i-= 20){
-                    Esc.writeMicroseconds(i);
-                    delay(200);
-                }
-            }
+            void auto_esc();
     };
 }
 
