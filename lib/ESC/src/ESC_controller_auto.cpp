@@ -1,6 +1,8 @@
 #include "ESC_controller_auto.h"
 #include <Arduino.h>
 Servo Esc;
+
+
 void EscController(const int Pin, const int max_pwm,
                     const int min_pwm)
 {
