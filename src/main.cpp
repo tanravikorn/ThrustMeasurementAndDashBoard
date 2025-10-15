@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "MyEsc.h"
+#include <SD.h>
 //ESC part
 const int escpin = 12;
 const int potentiometer_pin = 32;
@@ -35,8 +36,8 @@ void loop() {
   int raw_value = analogRead(current_sensor_pin);//0-4095
   delay(10);
   float V_out = (raw_value / (float) 4095 ) * VCC;
-  float current = (V_out - V_offset) / Sensitive;
-  Serial.printf("Current: %.3f\n", current);
+  float current_out = (V_out - V_offset) / Sensitive;
+  Serial.printf("Current: %.3f\n", current_out);
   delay(10);
 
   //Voltage Sensor
@@ -44,7 +45,12 @@ void loop() {
   delay(10);
   float Voltage_out = ((raw_vol / 4059.0) * VCC) * ratio;
   Serial.printf("Voltage used : %.3f", Voltage_out);
+  float power_used = Voltage_out * current_out;
+  Serial.printf("Power used : %.3f",power_used);
   delay(10);
+  
+  //write files;
+
 
 }
 
