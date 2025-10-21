@@ -1,8 +1,12 @@
 #include "MyEsc.h"
 
-void CUHAR::ESC::potentiometer_esc(const int speed)
+int CUHAR::ESC::write()
+
 {
+    const int value = analogRead(potential_pin);
+    const int speed = map(value, 0, 4095, min_pwm, max_pwm);
     Esc.writeMicroseconds(speed);
+    return speed;
 }
 void CUHAR::ESC::auto_esc(){
         Esc.writeMicroseconds(min_pwm);

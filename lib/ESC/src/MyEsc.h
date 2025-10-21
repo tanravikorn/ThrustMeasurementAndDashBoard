@@ -9,11 +9,13 @@ namespace CUHAR{
             Servo Esc;
             const int max_pwm = 1940;
             const int min_pwm = 1100;
+            int potential_pin;
         public:
-            ESC(const int pin){
+            ESC(const int pin, const int poten_pin){
                 Esc.attach(pin, min_pwm, max_pwm);
+                potential_pin = poten_pin;
             };
-            void potentiometer_esc(const int Poten_read);
+            int write();
             void auto_esc();
     };
 }
