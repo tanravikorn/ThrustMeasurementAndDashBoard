@@ -22,7 +22,8 @@ CUHAR::mysd MySD(SD_pin);
 //loadCell
 const int pin_DT = 2;
 const int pin_sck = 4;
-CUHAR::Loadcell myloadcell(pin_DT, pin_sck,1.0);
+const int calibrate = 1.0;
+CUHAR::Loadcell myloadcell(pin_DT, pin_sck,calibrate);
 //LCD
 const int pin_SDA = 21;
 const int pin_SCl = 22;
@@ -36,25 +37,44 @@ volatile float g_thrust = 0.0;
 
 SemaphoreHandle_t dataMutex; //mutex ของ data
 
-void controlAndReadTask(void *pvParameters) {
-
+void escControlTask(void *pvParameters) {
   for (;;) {
     myEsc.write();
-    float Current = currentSensor.Read();
-    float voltage = VolSensor.Read();
-    float thrust = myloadcell.Read(); // ค่าที่ได้คือหน่วยนิวตัน (N)
-    float power = Current * voltage;
+    vTaskDelay(pdMS_TO_TICKS(20)); 
+  }
+}
 
-    // 2. ล็อก Mutex แล้วอัปเดตค่า Global
+void currentSensorTask(void *pvParameters) {
+  for (;;) {
+    float Current = currentSensor.Read();
     if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       g_current = Current;
+      xSemaphoreGive(dataMutex);
+    }
+    vTaskDelay(pdMS_TO_TICKS(100)); // อ่านค่าทุก 100ms
+  }
+}
+
+void voltageSensorTask(void *pvParameters) {
+  for (;;) {
+    float voltage = VolSensor.Read();
+    if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       g_voltage = voltage;
-      g_power = power;
+      xSemaphoreGive(dataMutex);
+    }
+    vTaskDelay(pdMS_TO_TICKS(100)); // อ่านค่าทุก 100ms
+  }
+}
+
+// Task สำหรับอ่านค่า Loadcell
+void loadcellTask(void *pvParameters) {
+  for (;;) {
+    float thrust = myloadcell.Read();
+    if (!isnan(thrust) && xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       g_thrust = thrust;
       xSemaphoreGive(dataMutex);
     }
-
-    vTaskDelay(pdMS_TO_TICKS(20)); 
+    vTaskDelay(pdMS_TO_TICKS(250)); // Loadcell อาจใช้เวลาอ่านนานกว่า
   }
 }
 
@@ -62,14 +82,14 @@ void logAndDisplayTask(void *pvParameters) {
   for (;;) {
     float localCurrent, localVoltage, localPower, localThrust;
 
-    // 1. ล็อก Mutex แล้วคัดลอกข้อมูล
+    //ล็อก Mutex แล้วคัดลอกข้อมูล
     if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       localCurrent = g_current;
       localVoltage = g_voltage;
-      localPower = g_power;
       localThrust = g_thrust;
       xSemaphoreGive(dataMutex);
     }
+    localPower = localCurrent * localVoltage;
 
     MySD.write(localCurrent, localVoltage, localPower, localThrust);
 
@@ -96,8 +116,12 @@ void setup() {
   // --- สร้าง Mutex ---
   dataMutex = xSemaphoreCreateMutex();
 
-  xTaskCreatePinnedToCore(controlAndReadTask, "Control&Read", 4096, NULL, 2, NULL, 1);
-  xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display", 8192, NULL, 1, NULL, 0);
+  xTaskCreatePinnedToCore(escControlTask, "ESCcontrol", 2048, NULL, 5, NULL, 1);
+  xTaskCreatePinnedToCore(currentSensorTask, "CurrentSensor", 2048, NULL, 2, NULL, 1);
+  xTaskCreatePinnedToCore(voltageSensorTask, "VoltageSensor", 2048, NULL, 2, NULL,1);
+  xTaskCreatePinnedToCore(loadcellTask, "loadcell", 4096, NULL, 2,NULL,1);
+  
+  xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display", 8192, NULL, 1, NULL, 1);
 }
 
 void loop() {}
