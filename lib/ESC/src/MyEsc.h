@@ -15,7 +15,7 @@ namespace CUHAR{
                 Esc.attach(pin, min_pwm, max_pwm);
                 potential_pin = poten_pin;
             };
-            int write();
+            int write(int value);
             void auto_esc();
     };
 }

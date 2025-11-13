@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <SD.h>
 #include "MyEsc.h"
-#include "current.h"
+#include "Mycurrent.h"
 #include "Voltage.h"
 #include "SDWrite.h"
 #include "loadcell.h"
 #include "lcd.h"
+
 //ESC part
 const int escpin = 12;
 const int potentiometer_pin = 32;
@@ -22,7 +23,7 @@ CUHAR::mysd MySD(SD_pin);
 //loadCell
 const int pin_DT = 2;
 const int pin_sck = 4;
-const int calibrate = 1.0;
+const int calibrate = 180.07;
 CUHAR::Loadcell myloadcell(pin_DT, pin_sck,calibrate);
 //LCD
 const int pin_SDA = 21;
@@ -39,19 +40,23 @@ SemaphoreHandle_t dataMutex; //mutex ของ data
 
 void escControlTask(void *pvParameters) {
   for (;;) {
-    myEsc.write();
+    const int value = analogRead(potentiometer_pin);
+    Serial.println(value);
+    myEsc.write(value);
     vTaskDelay(pdMS_TO_TICKS(20)); 
   }
 }
 
 void currentSensorTask(void *pvParameters) {
   for (;;) {
-    float Current = currentSensor.Read();
+    const int read_analog = analogRead(current_sensor_pin);
+    float Current = currentSensor.Read(read_analog);
+
     if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       g_current = Current;
       xSemaphoreGive(dataMutex);
     }
-    vTaskDelay(pdMS_TO_TICKS(100)); // อ่านค่าทุก 100ms
+    vTaskDelay(pdMS_TO_TICKS(10)); // อ่านค่าทุก 100ms
   }
 }
 
@@ -62,7 +67,7 @@ void voltageSensorTask(void *pvParameters) {
       g_voltage = voltage;
       xSemaphoreGive(dataMutex);
     }
-    vTaskDelay(pdMS_TO_TICKS(100)); // อ่านค่าทุก 100ms
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -74,7 +79,7 @@ void loadcellTask(void *pvParameters) {
       g_thrust = thrust;
       xSemaphoreGive(dataMutex);
     }
-    vTaskDelay(pdMS_TO_TICKS(250)); // Loadcell อาจใช้เวลาอ่านนานกว่า
+    vTaskDelay(pdMS_TO_TICKS(10)); 
   }
 }
 
@@ -96,24 +101,23 @@ void logAndDisplayTask(void *pvParameters) {
     myLcd.printscreen(localCurrent, localVoltage, localPower, localThrust);
 
 
-    vTaskDelay(pdMS_TO_TICKS(1000)); // ทำงานทุก 1 วินาที
+    vTaskDelay(pdMS_TO_TICKS(10)); 
   }
 }
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
+  delay(100);
 
   myLcd.begin();
-  
+  delay(100);
   if (!MySD.ensure()) {
     Serial.println("SD Card Error! Halting.");
     while (1); 
   }
   Serial.println("SD Card is ready.");
-  delay(1000);
+  delay(100);
 
-  // --- สร้าง Mutex ---
   dataMutex = xSemaphoreCreateMutex();
 
   xTaskCreatePinnedToCore(escControlTask, "ESCcontrol", 2048, NULL, 5, NULL, 1);
@@ -121,7 +125,7 @@ void setup() {
   xTaskCreatePinnedToCore(voltageSensorTask, "VoltageSensor", 2048, NULL, 2, NULL,1);
   xTaskCreatePinnedToCore(loadcellTask, "loadcell", 4096, NULL, 2,NULL,1);
   
-  xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display", 8192, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display", 8192, NULL, 2, NULL, 1);
 }
 
 void loop() {}

@@ -13,7 +13,7 @@ namespace CUHAR{
                 calibrate = cal;
                 MyLoadCell.begin(DT, SCK);
                 MyLoadCell.set_scale(calibrate);
-                MyLoadCell.tare();
+                setZero();
 
             }
             void setCalibrate(const int cal){

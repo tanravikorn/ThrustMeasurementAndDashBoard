@@ -2,8 +2,9 @@
 
 float CUHAR::Loadcell::Read(){
     if (MyLoadCell.is_ready()) {
-        float value = MyLoadCell.get_units(10);  // อ่านค่าเฉลี่ย 10 ครั้ง kg/g
-        return (value/1000)*9.8;
+        float value = MyLoadCell.get_units(1);
+        float output = (value/1000)*9.8;
+        return (output >=0) ? output : -1 * output;
     }
     return NAN;
 

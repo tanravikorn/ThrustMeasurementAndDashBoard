@@ -13,6 +13,15 @@ namespace CUHAR
                 voltage_pin = pin;
             }
             float Read();
+            float set(){
+                int sum;
+                for(int i =0;i<50000;i++){
+                    sum += analogRead(voltage_pin);
+                }
+                float avg = sum/50000;
+                return 3.3/avg;
+
+            }
     };
 } // namespace CUHAR
 
