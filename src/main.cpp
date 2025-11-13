@@ -7,6 +7,8 @@
 #include "loadcell.h"
 #include "lcd.h"
 
+#include "INA226Task.h"
+
 //ESC part
 const int escpin = 12;
 const int potentiometer_pin = 32;
@@ -128,6 +130,7 @@ void setup() {
   xTaskCreatePinnedToCore(loadcellTask, "loadcell", 4096, NULL, 2,NULL,1);
   
   xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display", 8192, NULL, 2, NULL, 1);
+  xTaskCreatePinnedToCore(INA226Task, "INA226Task", 2048, NULL, 1, NULL, 1);
 }
 
 void loop() {}
