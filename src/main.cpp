@@ -17,9 +17,7 @@ SemaphoreHandle_t dataMutex;
 void setup() {
   Serial.begin(115200);
   delay(100);
-
   
-  delay(100);
   dataMutex = xSemaphoreCreateMutex();
 
   xTaskCreatePinnedToCore(escControlTask, "ESCcontrol", 2048, NULL, 5, NULL, 1);

@@ -1,6 +1,9 @@
 #include "INA226.h"
 
 INA226 INA(0x40);
+volatile float ina226_voltage = 0.0;
+volatile float ina226_current = 0.0;
+volatile float ina226_power = 0.0;
 
 void INA226Task(void *pvParameter)
 {
@@ -21,25 +24,20 @@ void INA226Task(void *pvParameter)
     for (;;)
     {
         Serial.println("\nPOWER2 = busVoltage x current");
-        Serial.println(" V\t mA \t mW \t mW \t mW");
-        Serial.println("BUS\tCURRENT\tPOWER\tPOWER2\tDELTA");
+        Serial.println(" V\t A \t W");
+        Serial.println("VOLTAGE\tCURRENT\tPOWER");
         for (int i = 0; i < 20; i++)
         {
-            float bv = INA.getBusVoltage();
+            ina226_voltage = INA.getBusVoltage();
             //  float sv = INA.getShuntVoltage_mV();
-            float cu = INA.getCurrent_mA();
-            float po = INA.getPower_mW();
-
-            Serial.print(bv, 3);
-            Serial.print("\t");
-            Serial.print(cu, 3);
-            Serial.print("\t");
-            Serial.print(po, 2);
-            Serial.print("\t");
-            Serial.print(bv * cu, 2);
-            Serial.print("\t");
-            Serial.print((bv * cu) - po, 2);
-            Serial.println();
+            ina226_current = INA.getCurrent();
+            ina226_power = INA.getPower();
+            Serial.printf(
+                "%.2f\t%.2f\t%.2f", 
+                ina226_voltage, 
+                ina226_current, 
+                ina226_power
+            );
             delay(50);
         }
     }
