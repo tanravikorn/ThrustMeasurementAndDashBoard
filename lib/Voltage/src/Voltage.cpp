@@ -1,7 +1,7 @@
 #include "Voltage.h"
 
-float CUHAR::voltage::Read(){
-    int raw_vol = analogRead(voltage_pin);
-    float Voltage_out = raw_vol * conversation;
-    return Voltage_out;
+float CUHAR::voltage::Read(const int rawValue){
+    const float V_read = (rawValue / 4095.0) * VCC;
+    const float V_out = V_read * ((R1 + R2) / R2);
+    return V_out; 
 }

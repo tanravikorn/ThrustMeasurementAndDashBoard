@@ -17,6 +17,7 @@ CUHAR::CurrentSensors currentSensor(current_sensor_pin);
 //voltage Part
 const int voltage_pin = 35;
 CUHAR::voltage VolSensor(voltage_pin);
+
 //Write Files Part
 const int SD_pin = 5;
 CUHAR::mysd MySD(SD_pin);
@@ -62,7 +63,8 @@ void currentSensorTask(void *pvParameters) {
 
 void voltageSensorTask(void *pvParameters) {
   for (;;) {
-    float voltage = VolSensor.Read();
+    const int raw_value = analogRead(voltage_pin);
+    const float voltage = VolSensor.Read(raw_value);
     if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE) {
       g_voltage = voltage;
       xSemaphoreGive(dataMutex);
