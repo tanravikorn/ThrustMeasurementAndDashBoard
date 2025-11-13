@@ -1,11 +1,11 @@
 #include "loadcell.h"
 #include "SharedData.h"
 
-const int pin_DT = 2;
-const int pin_sck = 4;
-const float calibrate = 180.07;
+#define PIN_DT 2
+#define PIN_SCK 4
+#define CALIBRATE 180.07f
 
-CUHAR::Loadcell myloadcell(pin_DT, pin_sck, calibrate);
+CUHAR::Loadcell myloadcell(PIN_DT, PIN_SCK, CALIBRATE);
 
 void loadcellTask(void *pvParameters)
 {

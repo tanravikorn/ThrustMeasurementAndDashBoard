@@ -2,11 +2,11 @@
 #include "lcd.h"
 #include "SharedData.h"
 
-const int SD_pin = 5;
-const int pin_SDA = 21;
-const int pin_SCl = 22;
+#define SD_PIN 5
+#define PIN_SDA 21
+#define PIN_SCL 22
 
-CUHAR::mysd MySD(SD_pin);
+CUHAR::mysd MySD(SD_PIN);
 CUHAR::LCD myLcd;
 
 void logAndDisplayTask(void *pvParameters)
