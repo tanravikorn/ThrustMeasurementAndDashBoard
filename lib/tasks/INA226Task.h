@@ -21,7 +21,7 @@ void INA226Task(void *pvParameter)
         return;
     }
     INA.setAverage(2);
-    INA.setMaxCurrentShunt(1, 0.002);
+    INA.setMaxCurrentShunt(40, 0.002); // 40 from current in esc 
     delay(10);
     for (;;)
     {
