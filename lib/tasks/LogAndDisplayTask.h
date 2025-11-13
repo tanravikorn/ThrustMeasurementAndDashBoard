@@ -1,6 +1,5 @@
 #include "SDWrite.h"
 #include "lcd.h"
-#include "SharedData.h"
 
 #define SD_PIN 5
 #define PIN_SDA 21
@@ -21,17 +20,6 @@ void logAndDisplayTask(void *pvParameters)
     Serial.println("SD Card is ready.");
     for (;;)
     {
-        float localCurrent, localVoltage, localPower, localThrust;
-
-        // ล็อก Mutex แล้วคัดลอกข้อมูล
-        if (xSemaphoreTake(dataMutex, portMAX_DELAY) == pdTRUE)
-        {
-            localCurrent = g_current;
-            localVoltage = g_voltage;
-            localThrust = g_thrust;
-            xSemaphoreGive(dataMutex);
-        }
-        localPower = localCurrent * localVoltage;
 
         MySD.write(localCurrent, localVoltage, localPower, localThrust);
 

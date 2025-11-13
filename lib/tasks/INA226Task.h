@@ -1,4 +1,5 @@
 #include "INA226.h"
+#include "globalData.h"
 
 INA226 INA(0x40);
 volatile float ina226_voltage = 0.0;
@@ -28,10 +29,18 @@ void INA226Task(void *pvParameter)
         Serial.println("VOLTAGE\tCURRENT\tPOWER");
         for (int i = 0; i < 20; i++)
         {
+            // read sensors
             ina226_voltage = INA.getBusVoltage();
             //  float sv = INA.getShuntVoltage_mV();
             ina226_current = INA.getCurrent();
             ina226_power = INA.getPower();
+
+            // update lcd data
+            lcdData.voltage = ina226_voltage;
+            lcdData.current = ina226_current;
+            lcdData.power = ina226_power;
+
+            // print
             Serial.printf(
                 "%.2f\t%.2f\t%.2f", 
                 ina226_voltage, 

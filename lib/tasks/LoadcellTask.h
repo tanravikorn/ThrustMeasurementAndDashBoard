@@ -1,5 +1,4 @@
 #include "loadcell.h"
-#include "SharedData.h"
 
 #define PIN_DT 2
 #define PIN_SCK 4
