@@ -36,13 +36,15 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
         myLcd.setCursor(0, 0);
         myLcd.print("V:");
         myLcd.print(displayVoltage, 2);
+        myLcd.print("V ");
         lastVoltage = displayVoltage;
     }
 
     if (fabs(displayCurrent - lastCurrent) > 0.01f) {
-        myLcd.setCursor(9, 0);
+        myLcd.setCursor(8, 0);
         myLcd.print("A:");
         myLcd.print(displayCurrent, 2);
+        myLcd.print("A ");
         lastCurrent = displayCurrent;
     }
 

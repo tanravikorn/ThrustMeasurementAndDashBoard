@@ -2,6 +2,7 @@
 #include "globalData.h"
 
 INA226 INA(0x40);
+
 volatile float ina226_voltage = 0.0;
 volatile float ina226_current = 0.0;
 volatile float ina226_power = 0.0;
@@ -42,7 +43,7 @@ void INA226Task(void *pvParameter)
 
             // print
             Serial.printf(
-                "%.2f\t%.2f\t%.2f", 
+                "%.4f\t%.2f\t%.2f", 
                 ina226_voltage, 
                 ina226_current, 
                 ina226_power

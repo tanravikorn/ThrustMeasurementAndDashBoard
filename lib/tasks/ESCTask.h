@@ -10,6 +10,7 @@ void escControlTask(void *pvParameters)
     for (;;)
     {
         const int value = analogRead(POTENTIOMETER_PIN);
+        Serial.println(value);
         myEsc.write(value);
         vTaskDelay(pdMS_TO_TICKS(20));
     }
