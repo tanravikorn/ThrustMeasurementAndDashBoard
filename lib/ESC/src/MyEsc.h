@@ -7,8 +7,8 @@ namespace CUHAR{
     class ESC{
         private:
             Servo Esc;
-            const int max_pwm = 1940;
-            const int min_pwm = 1100;
+            const int max_pwm = 2000;
+            const int min_pwm = 1000;
             int potential_pin;
         public:
             ESC(const int pin, const int poten_pin){

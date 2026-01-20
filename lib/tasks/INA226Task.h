@@ -9,9 +9,6 @@ volatile float ina226_power = 0.0;
 
 void INA226Task(void *pvParameter)
 {
-    Serial.println(__FILE__);
-    Serial.print("INA226_LIB_VERSION: ");
-    Serial.println(INA226_LIB_VERSION);
 
     Wire.begin();
 
@@ -25,11 +22,10 @@ void INA226Task(void *pvParameter)
     delay(10);
     for (;;)
     {
-        Serial.println("\nPOWER2 = busVoltage x current");
-        Serial.println(" V\t A \t W");
-        Serial.println("VOLTAGE\tCURRENT\tPOWER");
-        for (int i = 0; i < 20; i++)
-        {
+        if(globalData.isRunning){
+            for (int i = 0; i < 20; i++)
+            {
+            if(!globalData.isRunning) break;
             // read sensors
             ina226_voltage = INA.getBusVoltage();
             //  float sv = INA.getShuntVoltage_mV();
@@ -37,18 +33,14 @@ void INA226Task(void *pvParameter)
             ina226_power = INA.getPower();
 
             // update lcd data
-            lcdData.voltage = ina226_voltage;
-            lcdData.current = ina226_current;
-            lcdData.power = ina226_power;
+            globalData.voltage = ina226_voltage;
+            globalData.current = ina226_current;
+            globalData.power = ina226_power;
 
-            // print
-            Serial.printf(
-                "%.4f\t%.2f\t%.2f", 
-                ina226_voltage, 
-                ina226_current, 
-                ina226_power
-            );
             delay(50);
+            }
+        }else{
+            vTaskDelay(pdMS_TO_TICKS(500));
         }
     }
 }

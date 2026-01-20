@@ -7,11 +7,18 @@ CUHAR::ESC myEsc(ESC_PIN, POTENTIOMETER_PIN);
 
 void escControlTask(void *pvParameters)
 {
+
     for (;;)
     {
-        const int value = analogRead(POTENTIOMETER_PIN);
-        Serial.println(value);
-        myEsc.write(value);
-        vTaskDelay(pdMS_TO_TICKS(20));
+        if(globalData.isRunning){
+            //const int value = analogRead(POTENTIOMETER_PIN);
+            //Serial.println(value);
+            const int value = globalData.throttle;
+            myEsc.write(value);
+            vTaskDelay(pdMS_TO_TICKS(20));
+        }
+        else{
+            vTaskDelay(pdMS_TO_TICKS(500));
+        }
     }
 }

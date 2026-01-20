@@ -6,6 +6,9 @@ struct LCDData
     float current = 0.0;
     float voltage = 0.0;
     float power = 0.0;
-} lcdData;
+    int rpm = 0;
+    bool isRunning = false; 
+    int throttle = 0;   
+} globalData;
 
 #endif

@@ -11,10 +11,15 @@ void loadcellTask(void *pvParameters)
 {
     for (;;)
     {
+        if(!globalData.isRunning){
+            vTaskDelay(pdMS_TO_TICKS(500));
+            continue;
+        }
+
         float thrust = myloadcell.Read();
         if (!isnan(thrust) )
         {
-            lcdData.thrust = thrust;
+            globalData.thrust = thrust;
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
