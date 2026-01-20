@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Motor Test Dashboard</title>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Thrust Measurement</h1>
+      <div class="rpm-container">
+        <div class="rpm-card">
+          <div class="rpm-icon">⚙️</div>
+          <div class="rpm-content">
+              <span class="rpm-label">MOTOR SPEED</span>
+              <div class="rpm-value-group">
+                  <span id="rpmValue">0</span>
+                  <span class="rpm-unit">RPM</span>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="controls">
+        <button id="btnStart" class="btn start">▶ Start Measurement</button>
+        <button id="btnStop" class="btn stop">⏹ Stop</button>
+        <div class="throttle-control" style="display: flex; align-items: center; gap: 10px; margin: 0 20px;">
+          <label for="throttleSlider">Speed:</label>
+          <input type="range" id="throttleSlider" min="0" max="4095" value="0" style="width: 200px;">
+          <span id="throttleValue">0</span>
+        </div>
+        <button id="btnExport" class="btn export">⬇ Export CSV</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="chart-card">
+          <canvas id="chartThrust"></canvas>
+        </div>
+        <div class="chart-card">
+          <canvas id="chartVoltage"></canvas>
+        </div>
+        <div class="chart-card">
+          <canvas id="chartCurrent"></canvas>
+        </div>
+        <div class="chart-card">
+          <canvas id="chartPower"></canvas>
+        </div>
+      </div>
+
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

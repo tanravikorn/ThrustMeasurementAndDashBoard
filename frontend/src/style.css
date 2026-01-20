@@ -1,0 +1,149 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  color-scheme: dark;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Control Panel */
+.controls {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.btn {
+  padding: 0.8em 1.5em;
+  font-size: 1.1em;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.1s;
+}
+
+.btn:active { transform: scale(0.95); }
+.btn.start { background-color: #2ecc71; color: #fff; }
+.btn.stop { background-color: #e74c3c; color: #fff; }
+
+/* Dashboard Grid 2x2 */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์ */
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid { grid-template-columns: 1fr; } /* มือถือเหลือ 1 คอลัมน์ */
+}
+
+.chart-card {
+  background-color: #242424;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  height: 300px; /* ความสูงกราฟ */
+  position: relative;
+}
+
+/* src/style.css */
+
+/* ... (style เดิม) ... */
+
+.btn.export {
+  background-color: #3498db; /* สีฟ้า */
+  color: #fff;
+  margin-left: 10px; /* เว้นระยะห่างจากปุ่ม Stop หน่อย */
+}
+
+.btn.export:hover {
+  background-color: #2980b9;
+}
+/* style.css */
+
+.rpm-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.rpm-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* เงานุ่มๆ */
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-left: 5px solid #646cff; /* ขีดสีม่วงด้านซ้าย */
+  min-width: 300px;
+}
+
+/* style.css */
+
+.rpm-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.rpm-card {
+  background-color: #1a1a1a; /* สีดำ */
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8); /* เงาบุ๋มลงไป */
+}
+
+.rpm-icon {
+  font-size: 2.5rem;
+  filter: grayscale(100%);
+}
+
+.rpm-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.rpm-label {
+  font-size: 0.8rem;
+  color: #aaa;
+  text-transform: uppercase;
+}
+
+#rpmValue {
+  font-family: 'Courier New', Courier, monospace; /* ฟอนต์เครื่องพิมพ์ดีด */
+  font-size: 3.5rem;
+  font-weight: bold;
+  color: #00ff41; /* เขียว Hacker */
+  text-shadow: 0 0 5px #00ff41; /* เอฟเฟกต์เรืองแสง */
+  min-width: 140px;
+  text-align: right;
+}
+
+.rpm-unit {
+  color: #00ff41;
+  font-family: monospace;
+}
