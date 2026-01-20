@@ -1,3 +1,12 @@
 # .gitignore
 node_modules/
 .env
+
+# Ignore SQLite Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Ignore SQLite Temporary files (สำคัญมาก เพราะคุณใช้ WAL mode)
+*.db-shm
+*.db-wal
