@@ -15,7 +15,7 @@ bool CUHAR::mysd:: ensure(){
     return true;
 }
 
-void CUHAR::mysd:: write(float Current, float Voltage, float Power,float Thrust){
+void CUHAR::mysd:: write(float Current, float Voltage, float Power,float Thrust,int RPM){
     if(!is_ready){
         return;
     }
@@ -31,6 +31,9 @@ void CUHAR::mysd:: write(float Current, float Voltage, float Power,float Thrust)
     datasheet.print(Power, 3);
     datasheet.print(",");
     datasheet.println(Thrust, 3);
+    datasheet.print(",");
+    datasheet.println(RPM, 3);
+
     datasheet.close();
 
 }

@@ -10,15 +10,9 @@ void escControlTask(void *pvParameters)
 
     for (;;)
     {
-        if(globalData.isRunning){
-            //const int value = analogRead(POTENTIOMETER_PIN);
-            //Serial.println(value);
-            const int value = globalData.throttle;
-            myEsc.write(value);
-            vTaskDelay(pdMS_TO_TICKS(20));
-        }
-        else{
-            vTaskDelay(pdMS_TO_TICKS(500));
-        }
+        const int value = analogRead(POTENTIOMETER_PIN);
+        Serial.println(value);
+        myEsc.write(value);
+        vTaskDelay(pdMS_TO_TICKS(20));
     }
 }
