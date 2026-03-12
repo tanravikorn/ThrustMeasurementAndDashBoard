@@ -9,12 +9,13 @@ void CUHAR::LCD::begin() {
     myLcd.print("System Starting...");
 }
 
-void CUHAR::LCD::printscreen(float current, float voltage, float power, float thrust) {
+void CUHAR::LCD::printscreen(float current, float voltage, float power, float thrust,int rpm) {
     // ค่าล่าสุดที่พิมพ์บนจอ (ใช้ตรวจว่าเปลี่ยนไหม)
     static float lastCurrent = -1, lastVoltage = -1, lastPower = -1, lastThrust = -1;
+    static int lastRpm = -1;
 
     // ตัวแปรเก็บค่าเฉลี่ยแบบ exponential
-    static float avgCurrent = 0, avgVoltage = 0, avgPower = 0, avgThrust = 0;
+    static float avgCurrent = 0, avgVoltage = 0, avgPower = 0, avgThrust = 0, avgrpm = 0;
 
     // ค่าความไว (alpha): ยิ่งน้อยยิ่งนิ่ง
     const float alpha = 0.2f;
@@ -24,16 +25,19 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     avgCurrent = alpha * current + (1 - alpha) * avgCurrent;
     avgPower   = alpha * power   + (1 - alpha) * avgPower;
     avgThrust  = alpha * thrust  + (1 - alpha) * avgThrust;
+    //avgrpm = alpha * rpm + (1 - alpha) * avgrpm;
 
     // ใช้ค่าที่ผ่านการกรองแล้วในการแสดงผล
     float displayVoltage = avgVoltage;
     float displayCurrent = avgCurrent;
     float displayPower   = avgPower;
     float displayThrust  = avgThrust;
-
+    int displayRpm = rpm;
     // อัปเดตเฉพาะถ้ามีการเปลี่ยนมากพอ (ลดการเขียน I2C)
+    myLcd.setCursor(0, 0);
+    myLcd.print("Welcome to CUHAR ");
     if (fabs(displayVoltage - lastVoltage) > 0.01f) {
-        myLcd.setCursor(0, 0);
+        myLcd.setCursor(0, 1);
         myLcd.print("V:");
         myLcd.print(displayVoltage, 2);
         myLcd.print("V ");
@@ -41,7 +45,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     }
 
     if (fabs(displayCurrent - lastCurrent) > 0.01f) {
-        myLcd.setCursor(8, 0);
+        myLcd.setCursor(8, 1);
         myLcd.print("A:");
         myLcd.print(displayCurrent, 2);
         myLcd.print("A ");
@@ -49,7 +53,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     }
 
     if (fabs(displayPower - lastPower) > 0.01f) {
-        myLcd.setCursor(0, 1);
+        myLcd.setCursor(0, 2);
         myLcd.print("P:");
         myLcd.print(displayPower, 2);
         myLcd.print("W ");
@@ -57,10 +61,19 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     }
 
     if (fabs(displayThrust - lastThrust) > 0.01f) {
-        myLcd.setCursor(8, 1);
+        myLcd.setCursor(8, 2);
         myLcd.print("T:");
         myLcd.print(displayThrust, 2);
         myLcd.print("N ");
         lastThrust = displayThrust;
     }
+    
+        if (displayRpm != lastRpm) {
+            // วางไว้บนบรรทัดที่สอง (index 1) เพื่อความเข้ากันกับจอ 2 บรรทัด
+            myLcd.setCursor(0, 3);
+            myLcd.print("RPM:");
+            myLcd.print(displayRpm);
+            myLcd.print("   ");
+            lastRpm = displayRpm;
+        }
 }

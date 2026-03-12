@@ -10,9 +10,9 @@ namespace CUHAR
         private:
             LiquidCrystal_I2C myLcd;
         public:
-            LCD() : myLcd(0x27, 16, 2) {}
+            LCD() : myLcd(0x27, 20, 4) {}
             void begin();
-            void printscreen(float current, float voltage, float power, float thrust);
+            void printscreen(float current, float voltage, float power, float thrust,int rpm);
             
     };
 } // namespace CUHAR

@@ -21,13 +21,9 @@ void logAndDisplayTask(void *pvParameters)
     // Serial.println("SD Card is ready.");
     for (;;)
     {
-         if(!globalData.isRunning){
-            vTaskDelay(pdMS_TO_TICKS(500));
-            continue;
-        }
         //MySD.write(lcdData.current, lcdData.voltage, lcdData.power, lcdData.thrust);
 
-        myLcd.printscreen(globalData.current, globalData.voltage, globalData.power, globalData.thrust);
+        myLcd.printscreen(globalData.current, globalData.voltage, globalData.power, globalData.thrust, globalData.rpm);
 
         vTaskDelay(pdMS_TO_TICKS(10));
     }
