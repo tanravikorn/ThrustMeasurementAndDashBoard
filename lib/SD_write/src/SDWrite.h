@@ -20,7 +20,7 @@ namespace CUHAR{
                 this->pin = pin;
             }
             bool ensure();
-            void write(float Current, float Voltage, float Power,float Thrust);
+            void write(float Current, float Voltage, float Power,float Thrust,int RPM);
     };
 }
 

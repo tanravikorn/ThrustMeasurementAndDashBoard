@@ -5,6 +5,7 @@
 
 const int wifiStatusInterval = 700;
 SocketIoClient socket;
+
 int count = 0;
 const int  max_int = INT_MAX;
 void emitWifiStatus(bool status) {
@@ -30,8 +31,6 @@ unsigned long lastSocketBeginAttempt = 0;
 const unsigned long socketReconnectInterval = 5000;
 
 volatile bool socketConnected = false;
-
-
 
 void onSocketConnect(const char* payload, size_t length) {
     (void)payload;
@@ -73,7 +72,6 @@ void commandControl(const char* payload, size_t length){
     if (cmd.startsWith("\"") && cmd.endsWith("\"") && cmd.length() >= 2) {
         cmd = cmd.substring(1, cmd.length() - 1);
     }
-
     //Serial.print("CMD: "); Serial.println(cmd);
     if (cmd == "START") globalData.isRunning = true;
     else if (cmd == "STOP")  globalData.isRunning = false;

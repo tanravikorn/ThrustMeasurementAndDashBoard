@@ -14,7 +14,7 @@ void setup() {
 
   xTaskCreatePinnedToCore(escControlTask,    "ESCcontrol",   8192, NULL, 2, NULL, 1);
   xTaskCreatePinnedToCore(loadcellTask,      "loadcell",     8192, NULL, 2, NULL, 1);
-  xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display",  8192, NULL, 1, NULL, 1);
+  //xTaskCreatePinnedToCore(logAndDisplayTask, "Log&Display",  8192, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(INA226Task,        "INA226Task",   8192, NULL, 1, NULL, 1);
   xTaskCreatePinnedToCore(IRSensorTask,      "IRSensorTask", 4096, NULL, 2, NULL, 1);
 
@@ -22,6 +22,11 @@ void setup() {
   xTaskCreatePinnedToCore(socketTask, "socketTask", 8192, NULL, 1, NULL, 0);
 }
 
+
+// float raw;
 void loop() {
   delay(1000);
+  // raw = myloadcell.Read();
+  // Serial.println(raw);
+  // delay(100);
 }

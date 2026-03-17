@@ -6,8 +6,8 @@
 namespace CUHAR{
     class Loadcell{
         private:
-            float calibrate;
-            float offset;
+            float calibrate = 197.0057591;
+            float offset = -296108.5612;
             HX711 MyLoadCell;
         public:
             Loadcell(const int DT, const int SCK){

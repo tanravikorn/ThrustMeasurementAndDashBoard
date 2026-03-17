@@ -26,6 +26,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     avgPower   = alpha * power   + (1 - alpha) * avgPower;
     avgThrust  = alpha * thrust  + (1 - alpha) * avgThrust;
     //avgrpm = alpha * rpm + (1 - alpha) * avgrpm;
+    //avgrpm = alpha * rpm + (1 - alpha) * avgrpm;
 
     // ใช้ค่าที่ผ่านการกรองแล้วในการแสดงผล
     float displayVoltage = avgVoltage;
@@ -36,7 +37,10 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     // อัปเดตเฉพาะถ้ามีการเปลี่ยนมากพอ (ลดการเขียน I2C)
     myLcd.setCursor(0, 0);
     myLcd.print("Welcome to CUHAR ");
+    myLcd.setCursor(0, 0);
+    myLcd.print("Welcome to CUHAR ");
     if (fabs(displayVoltage - lastVoltage) > 0.01f) {
+        myLcd.setCursor(0, 1);
         myLcd.setCursor(0, 1);
         myLcd.print("V:");
         myLcd.print(displayVoltage, 2);
@@ -46,6 +50,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
 
     if (fabs(displayCurrent - lastCurrent) > 0.01f) {
         myLcd.setCursor(8, 1);
+        myLcd.setCursor(8, 1);
         myLcd.print("A:");
         myLcd.print(displayCurrent, 2);
         myLcd.print("A ");
@@ -54,6 +59,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
 
     if (fabs(displayPower - lastPower) > 0.01f) {
         myLcd.setCursor(0, 2);
+        myLcd.setCursor(0, 2);
         myLcd.print("P:");
         myLcd.print(displayPower, 2);
         myLcd.print("W ");
@@ -61,6 +67,7 @@ void CUHAR::LCD::printscreen(float current, float voltage, float power, float th
     }
 
     if (fabs(displayThrust - lastThrust) > 0.01f) {
+        myLcd.setCursor(8, 2);
         myLcd.setCursor(8, 2);
         myLcd.print("T:");
         myLcd.print(displayThrust, 2);

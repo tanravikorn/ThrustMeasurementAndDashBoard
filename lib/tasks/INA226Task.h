@@ -22,10 +22,8 @@ void INA226Task(void *pvParameter)
     delay(10);
     for (;;)
     {
-        if(globalData.isRunning){
             for (int i = 0; i < 20; i++)
             {
-            if(!globalData.isRunning) break;
             // read sensors
             ina226_voltage = INA.getBusVoltage();
             //  float sv = INA.getShuntVoltage_mV();
@@ -39,8 +37,5 @@ void INA226Task(void *pvParameter)
 
             delay(50);
             }
-        }else{
-            vTaskDelay(pdMS_TO_TICKS(500));
-        }
     }
 }
