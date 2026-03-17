@@ -3,10 +3,24 @@
 #include <SocketIoClient.h>
 #include <globalData.h>
 
+const int wifiStatusInterval = 700;
+SocketIoClient socket;
+int count = 0;
+const int  max_int = INT_MAX;
+void emitWifiStatus(bool status) {
+    String jsonString = String(status ? "true" : "false");
+    socket.emit("esp32-wifi-status", jsonString.c_str());
+}
+
+void emitSocketStatus(bool status) {
+    String jsonString = String(status ? "true" : "false");
+    socket.emit("esp32-socket-status", jsonString.c_str());
+}
+
 const char* wifi_name = "CUHAR FreeWifi";
 const char* password = "FlyHighSkyHigh";
 
-char host[] = "192.168.1.109";
+char host[] = "192.168.1.103";
 int port = 3000;
 const char* socketUrl = "/socket.io/?EIO=3&transport=websocket";
 
@@ -17,13 +31,14 @@ const unsigned long socketReconnectInterval = 5000;
 
 volatile bool socketConnected = false;
 
-SocketIoClient socket;
+
 
 void onSocketConnect(const char* payload, size_t length) {
     (void)payload;
     (void)length;
     socketConnected = true;
     Serial.println("Socket connected");
+    emitSocketStatus(true);
 }
 
 void onSocketDisconnect(const char* payload, size_t length) {
@@ -31,6 +46,7 @@ void onSocketDisconnect(const char* payload, size_t length) {
     (void)length;
     socketConnected = false;
     Serial.println("Socket disconnected");
+    emitSocketStatus(false);
 }
 
 void onThrottle(const char* payload, size_t length) {
@@ -70,6 +86,7 @@ void socketTask(void *pvParameters){
         vTaskDelay(pdMS_TO_TICKS(100));
         Serial.print(".");
     }
+    emitWifiStatus(true);
     Serial.println();
     Serial.println("connected");
 
@@ -80,6 +97,7 @@ void socketTask(void *pvParameters){
     socket.begin(host, port, socketUrl);
     lastSocketBeginAttempt = millis();
     Serial.println("Socket task started!");
+
     for(;;){
 
         if(WiFi.status() != WL_CONNECTED){
@@ -89,17 +107,22 @@ void socketTask(void *pvParameters){
             }
 
             socketConnected = false;
-
+            emitWifiStatus(false);
             Serial.println("Reconnecting WiFi...");
             WiFi.reconnect();
-            
-
             vTaskDelay(pdMS_TO_TICKS(3000)); 
             continue;
         }
+    if (count < max_int) {
+        count++;
+    } else {
+        count = 0;
+    }
+    if (count % wifiStatusInterval == 0) {
+        emitWifiStatus(true);
+    }
 
         socket.loop();
-
         unsigned long now = millis();
         if (!socketConnected && (now - lastSocketBeginAttempt >= socketReconnectInterval)) {
             Serial.println("Reconnecting socket...");
@@ -125,6 +148,7 @@ void socketTask(void *pvParameters){
         }
 
         vTaskDelay(pdMS_TO_TICKS(10));
+        
     }
 
 }

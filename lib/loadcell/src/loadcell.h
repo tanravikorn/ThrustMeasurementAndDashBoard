@@ -7,12 +7,13 @@ namespace CUHAR{
     class Loadcell{
         private:
             float calibrate;
+            float offset;
             HX711 MyLoadCell;
         public:
-            Loadcell(const int DT, const int SCK,const float cal){
-                calibrate = cal;
+            Loadcell(const int DT, const int SCK){
                 MyLoadCell.begin(DT, SCK);
                 MyLoadCell.set_scale(calibrate);
+                MyLoadCell.set_offset(offset);
                 setZero();
 
             }

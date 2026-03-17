@@ -3,9 +3,8 @@
 
 #define PIN_DT 2
 #define PIN_SCK 4
-#define CALIBRATE 180.07f
 
-CUHAR::Loadcell myloadcell(PIN_DT, PIN_SCK, CALIBRATE);
+CUHAR::Loadcell myloadcell(PIN_DT, PIN_SCK);
 
 void loadcellTask(void *pvParameters)
 {
